@@ -1,204 +1,353 @@
+
 import React, { useState } from "react";
 import "./App.css";
 
-function App() {
-  const petsData = [
-    { id: 1, name: "Bruno", type: "Dog", age: "2 Years", image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500", description: "Friendly and playful Golden Retriever." },
-    { id: 2, name: "Luna", type: "Cat", age: "1 Year", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500", description: "Cute and loving little cat." },
-    { id: 3, name: "Rocky", type: "Dog", age: "3 Years", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500", description: "Energetic and loyal companion." },
-    { id: 4, name: "Milo", type: "Cat", age: "6 Months", image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=500", description: "Adorable kitten looking for a home." }
-  ];
+const pets = [
+  {
+    id: 1,
+    name: "Bruno",
+    type: "Dog",
+    age: "2 years",
+    location: "Vijayawada",
+    image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=600"
+  },
+  {
+    id: 2,
+    name: "Luna",
+    type: "Cat",
+    age: "1 year",
+    location: "Guntur",
+    image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=600"
+  },
+  {
+    id: 3,
+    name: "Max",
+    type: "Dog",
+    age: "8 months",
+    location: "Rajahmundry",
+    image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600"
+  },
+  {
+    id: 4,
+    name: "Milo",
+    type: "Cat",
+    age: "6 months",
+    location: "Vijayawada",
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600"
+  }
+];
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginName, setLoginName] = useState("");
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [pets, setPets] = useState(petsData);
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [register, setRegister] = useState(false);
+  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const [showForm, setShowForm] = useState(false);
-  const [selectedPet, setSelectedPet] = useState("");
-  const [adopter, setAdopter] = useState("");
-  const [email, setEmail] = useState("");
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [myPets, setMyPets] = useState(pets);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [newPet, setNewPet] = useState({ name: "", type: "Dog", age: "", image: "", description: "" });
+  const [message, setMessage] = useState("");
 
-  const filteredPets = pets.filter((pet) => {
+  function handleLogin(e) {
+    e.preventDefault();
+
+    if (!email || !password) {
+      setMessage("Please enter your email and password.");
+      return;
+    }
+
+    setUser(email.split("@")[0]);
+    setLoggedIn(true);
+    setMessage("");
+  }
+
+  function handleAdoption(e) {
+    e.preventDefault();
+
+    const application = {
+      id: Date.now(),
+      pet: selectedPet.name,
+      applicant: user,
+      status: "Pending"
+    };
+
+    const updated = [...applications, application];
+    setApplications(updated);
+    localStorage.setItem("petApplications", JSON.stringify(updated));
+
+    setSelectedPet(null);
+    alert("Your adoption application has been submitted!");
+  }
+
+  function addPet() {
+    const name = prompt("Enter pet name:");
+    if (!name) return;
+
+    const type = prompt("Enter pet type (Dog or Cat):") || "Dog";
+    const age = prompt("Enter pet age:") || "Unknown";
+
+    setMyPets([
+      ...myPets,
+      {
+        id: Date.now(),
+        name,
+        type,
+        age,
+        location: "Vijayawada",
+        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600"
+      }
+    ]);
+
+    alert("Pet added successfully!");
+  }
+
+  const filteredPets = myPets.filter((pet) => {
     const matchesSearch = pet.name.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "All" || pet.type === filter;
     return matchesSearch && matchesFilter;
   });
 
-  function handleLogin(event) {
-    event.preventDefault();
-    if (loginEmail.trim() && loginPassword.trim()) {
-      setIsLoggedIn(true);
-    }
-  }
-
-  function adoptPet(event) {
-    event.preventDefault();
-    alert("Thank you " + adopter + "! Your adoption request for " + selectedPet + " has been submitted successfully.");
-    setShowForm(false);
-    setAdopter("");
-    setEmail("");
-  }
-
-  function addPet(event) {
-    event.preventDefault();
-    setPets([...pets, { ...newPet, id: Date.now() }]);
-    setNewPet({ name: "", type: "Dog", age: "", image: "", description: "" });
-    alert("New pet added successfully!");
-    setShowAdmin(false);
-  }
-
-  if (!isLoggedIn) {
+  if (!loggedIn) {
     return (
-      <main className="login-page">
-        <section className="login-card">
-          <div className="login-visual">
-            <div className="visual-overlay">
-              <div className="login-brand"><span>🐾</span> Happy Paws</div>
-              <div className="visual-message">
-                <p className="eyebrow">A LITTLE LOVE CHANGES EVERYTHING</p>
-                <h1>Find your<br />forever friend.</h1>
-                <p>Every paw deserves a place to call home. Your new best friend is waiting for you.</p>
-                <div className="paw-note">♡ Adopt love. Share happiness.</div>
-              </div>
-            </div>
+      <div className="login-page">
+        <div className="login-image">
+          <div className="image-overlay">
+            <h1>Find Your New Best Friend.</h1>
+            <p>Every pet deserves a loving home. Start your adoption journey today.</p>
           </div>
+        </div>
 
-          <div className="login-panel">
-            <div className="mobile-brand">🐾 Happy Paws</div>
-            <div className="login-content">
-              <div className="welcome-icon">♡</div>
-              <p className="login-kicker">{isRegister ? "START YOUR ADOPTION JOURNEY" : "WELCOME TO HAPPY PAWS"}</p>
-              <h2>{isRegister ? "Create your account" : "Welcome back!"}</h2>
-              <p className="login-subtitle">{isRegister ? "Join our caring community of pet lovers." : "Sign in to meet your new best friend."}</p>
+        <div className="login-container">
+          <div className="login-box">
+            <div className="logo">🐾 Happy Paws</div>
+            <p className="welcome">Welcome to Happy Paws</p>
+            <h2>{register ? "Create an Account" : "Welcome Back!"}</h2>
+            <p className="subtext">Your new best friend is waiting for you.</p>
 
-              <form className="login-form" onSubmit={handleLogin}>
-                {isRegister && (
-                  <label>
-                    Full name
-                    <input type="text" placeholder="Enter your name" value={loginName} onChange={(e) => setLoginName(e.target.value)} required />
-                  </label>
-                )}
-                <label>
-                  Email address
-                  <input type="email" placeholder="you@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
-                </label>
-                <label>
-                  Password
-                  <div className="password-wrap">
-                    <input type={showPassword ? "text" : "password"} placeholder="Enter your password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required minLength="4" />
-                    <button type="button" className="show-password" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button>
-                  </div>
-                </label>
-                {!isRegister && <div className="forgot-row"><span>Keep your details safe</span><span className="forgot-note">Forgot password?</span></div>}
-                <button className="login-submit" type="submit">{isRegister ? "Create account" : "Sign in"} <span>→</span></button>
-              </form>
+            <form onSubmit={handleLogin}>
+              {register && (
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  required
+                  onChange={(e) => setUser(e.target.value)}
+                />
+              )}
 
-              <p className="switch-account">
-                {isRegister ? "Already have an account?" : "New to Happy Paws?"}{" "}
-                <button type="button" onClick={() => setIsRegister(!isRegister)}>{isRegister ? "Sign in" : "Create an account"}</button>
-              </p>
-              <p className="login-footnote">By continuing, you agree to help make the world kinder for pets. 🐾</p>
-            </div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+              <button type="submit" className="primary-btn">
+                {register ? "Create Account" : "Login"}
+              </button>
+            </form>
+
+            {message && <p className="error">{message}</p>}
+
+            <p className="switch-text">
+              {register ? "Already have an account?" : "New to Happy Paws?"}
+              <span onClick={() => setRegister(!register)}>
+                {register ? " Login" : " Create Account"}
+              </span>
+            </p>
+
+            <p className="demo-note">
+              Demo project: enter any email and password to continue.
+            </p>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div>
+    <div className="website">
       <nav className="navbar">
-        <h2>🐾 Happy Paws</h2>
-        <div>
+        <div className="logo">🐾 Happy Paws</div>
+
+        <div className="nav-links">
           <a href="#home">Home</a>
-          <a href="#pets">Available Pets</a>
-          <a href="#about">About</a>
+          <a href="#pets">Adopt a Pet</a>
+          <a href="#about">About Us</a>
           <a href="#contact">Contact</a>
-          <button onClick={() => setShowAdmin(!showAdmin)}>Admin</button>
-          <button className="logout-btn" onClick={() => { setIsLoggedIn(false); setIsRegister(false); }}>Log out</button>
+        </div>
+
+        <div className="nav-actions">
+          <span>Hello, {user}!</span>
+          <button className="logout-btn" onClick={() => setLoggedIn(false)}>
+            Logout
+          </button>
         </div>
       </nav>
 
       <section className="hero" id="home">
-        <div>
-          <h1>Find Your Forever Friend ❤️</h1>
-          <p>Adopt a pet and give them the loving home they deserve.</p>
-          <a href="#pets" className="hero-btn">Explore Pets</a>
+        <div className="hero-content">
+          <p className="tagline">GIVE LOVE. FIND LOVE.</p>
+          <h1>Adopt Love.<br />Change a Life.</h1>
+          <p>
+            Find your perfect furry companion and give a homeless pet
+            the loving home they deserve.
+          </p>
+          <a href="#pets" className="hero-btn">Meet Our Pets →</a>
         </div>
       </section>
 
       <section className="pets-section" id="pets">
-        <h1>Meet Our Lovely Pets 🐶</h1>
-        <p>Choose your new best friend!</p>
-        <input className="search" type="text" placeholder="Search pets by name..." value={search} onChange={(e) => setSearch(e.target.value)} />
-        <div className="filters">
-          {["All", "Dog", "Cat"].map((type) => (
-            <button key={type} className={filter === type ? "active" : ""} onClick={() => setFilter(type)}>{type}</button>
-          ))}
+        <p className="section-tag">MEET YOUR NEW BEST FRIEND</p>
+        <h2>Pets Looking for a Home</h2>
+        <p className="section-description">
+          They are waiting for someone just like you.
+        </p>
+
+        <div className="search-area">
+          <input
+            type="text"
+            placeholder="Search pets by name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+            <option value="All">All Pets</option>
+            <option value="Dog">Dogs</option>
+            <option value="Cat">Cats</option>
+          </select>
         </div>
-        <div className="pet-container">
+
+        <div className="pet-grid">
           {filteredPets.map((pet) => (
             <div className="pet-card" key={pet.id}>
               <img src={pet.image} alt={pet.name} />
               <div className="pet-info">
-                <h2>{pet.name}</h2>
-                <p>Type: {pet.type}</p>
-                <p>Age: {pet.age}</p>
-                <p>{pet.description}</p>
-                <button onClick={() => { setSelectedPet(pet.name); setShowForm(true); }}>Adopt Me</button>
+                <h3>{pet.name}</h3>
+                <p>{pet.type} • {pet.age}</p>
+                <p>📍 {pet.location}</p>
+                <button onClick={() => setSelectedPet(pet)}>
+                  Adopt Me
+                </button>
               </div>
             </div>
           ))}
         </div>
-        {filteredPets.length === 0 && <p>No pets found. Try another search!</p>}
+
+        {filteredPets.length === 0 && (
+          <p className="empty-message">No pets found. Try another search.</p>
+        )}
       </section>
 
-      {showForm && (
-        <div className="form-section">
-          <h2>Pet Adoption Application 🐾</h2>
-          <p>Applying to adopt: {selectedPet}</p>
-          <form onSubmit={adoptPet}>
-            <input type="text" placeholder="Your Full Name" value={adopter} onChange={(e) => setAdopter(e.target.value)} required />
-            <input type="email" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <button type="submit">Submit Application</button>
-            <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
-          </form>
+      <section className="about-section" id="about">
+        <div>
+          <p className="section-tag">OUR MISSION</p>
+          <h2>Every Paw Deserves a Loving Home</h2>
+          <p>
+            Happy Paws connects loving families with pets who need a home.
+            We believe adoption creates happier lives for both pets and people.
+          </p>
+        </div>
+        <div className="about-emoji">🐶 🐱</div>
+      </section>
+
+      <section className="admin-section">
+        <button
+          className="admin-btn"
+          onClick={() => setShowAdmin(!showAdmin)}
+        >
+          {showAdmin ? "Hide Dashboard" : "Open Admin Dashboard"}
+        </button>
+
+        {showAdmin && (
+          <div className="dashboard">
+            <h2>Admin Dashboard</h2>
+            <div className="stats">
+              <div><strong>{myPets.length}</strong><span>Total Pets</span></div>
+              <div><strong>{applications.length}</strong><span>Applications</span></div>
+              <div>
+                <strong>
+                  {applications.filter((a) => a.status === "Pending").length}
+                </strong>
+                <span>Pending</span>
+              </div>
+            </div>
+
+            <button onClick={addPet}>+ Add New Pet</button>
+
+            <h3>Adoption Applications</h3>
+            {applications.length === 0 && <p>No applications yet.</p>}
+
+            {applications.map((application) => (
+              <div className="application" key={application.id}>
+                <span>{application.pet} — {application.applicant}</span>
+                <select
+                  value={application.status}
+                  onChange={(e) => {
+                    const updated = applications.map((a) =>
+                      a.id === application.id
+                        ? { ...a, status: e.target.value }
+                        : a
+                    );
+                    setApplications(updated);
+                    localStorage.setItem(
+                      "petApplications",
+                      JSON.stringify(updated)
+                    );
+                  }}
+                >
+                  <option>Pending</option>
+                  <option>Approved</option>
+                  <option>Rejected</option>
+                </select>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <footer id="contact">
+        <h2>🐾 Happy Paws</h2>
+        <p>Giving every pet a chance to be loved.</p>
+        <p>Contact: happypaws@example.com</p>
+        <p>© 2026 Happy Paws. All rights reserved.</p>
+      </footer>
+
+      {selectedPet && (
+        <div className="modal-background">
+          <div className="modal">
+            <button
+              className="close-btn"
+              onClick={() => setSelectedPet(null)}
+            >
+              ×
+            </button>
+
+            <h2>Adopt {selectedPet.name}</h2>
+            <p>Fill in your details to submit an adoption application.</p>
+
+            <form onSubmit={handleAdoption}>
+              <input placeholder="Your Full Name" required />
+              <input type="email" placeholder="Your Email" required />
+              <input placeholder="Your Phone Number" required />
+              <textarea placeholder="Why would you like to adopt?" required />
+              <button type="submit">Submit Application</button>
+            </form>
+          </div>
         </div>
       )}
-
-      {showAdmin && (
-        <section className="admin-section">
-          <h2>Admin Dashboard</h2>
-          <p>Add a new pet to the adoption platform.</p>
-          <form onSubmit={addPet}>
-            <input placeholder="Pet Name" value={newPet.name} onChange={(e) => setNewPet({ ...newPet, name: e.target.value })} required />
-            <select value={newPet.type} onChange={(e) => setNewPet({ ...newPet, type: e.target.value })}><option>Dog</option><option>Cat</option></select>
-            <input placeholder="Pet Age" value={newPet.age} onChange={(e) => setNewPet({ ...newPet, age: e.target.value })} required />
-            <input placeholder="Pet Image URL" value={newPet.image} onChange={(e) => setNewPet({ ...newPet, image: e.target.value })} required />
-            <input placeholder="Pet Description" value={newPet.description} onChange={(e) => setNewPet({ ...newPet, description: e.target.value })} required />
-            <button type="submit">Add Pet</button>
-          </form>
-        </section>
-      )}
-
-      <section className="about" id="about">
-        <h1>About Happy Paws ❤️</h1>
-        <p>Happy Paws is a pet adoption platform that connects loving families with pets looking for a forever home. Our mission is to make every pet feel loved and safe.</p>
-      </section>
-      <section className="contact" id="contact">
-        <h1>Contact Us</h1>
-        <p>Email: happypaws@gmail.com</p>
-        <p>Phone: +91 98765 43210</p>
-        <p>Address: Vijayawada, Andhra Pradesh</p>
-      </section>
-      <footer><p>© 2026 Happy Paws | Adopt Don't Shop 🐾</p></footer>
     </div>
   );
 }

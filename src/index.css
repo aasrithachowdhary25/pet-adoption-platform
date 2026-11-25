@@ -1,33 +1,493 @@
 
-:root {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-}
-
 * {
   box-sizing: border-box;
 }
 
-html,
 body {
   margin: 0;
-  width: 100%;
-  min-width: 320px;
-  min-height: 100%;
+  font-family: Arial, sans-serif;
+  background: #fffaf3;
+  color: #49372c;
 }
 
-body {
-  display: block;
+button {
+  cursor: pointer;
+  font-family: inherit;
 }
 
-#root {
-  width: 100%;
+.login-page {
   min-height: 100vh;
+  display: flex;
+  background: #fffaf3;
 }
 
-button,
-input,
-select {
-  font: inherit;
+.login-image {
+  width: 50%;
+  min-height: 100vh;
+  background: linear-gradient(#0005, #0007),
+    url("https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200")
+    center/cover;
+  display: flex;
+  align-items: end;
+  padding: 70px;
+}
+
+.image-overlay {
+  color: white;
+  max-width: 450px;
+}
+
+.image-overlay h1 {
+  font-size: 48px;
+  line-height: 1.15;
+}
+
+.image-overlay p {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.login-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 390px;
+}
+
+.logo {
+  color: #8b5e3c;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 45px;
+}
+
+.welcome,
+.section-tag,
+.tagline {
+  color: #a87953;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.login-box h2 {
+  font-size: 35px;
+  margin: 10px 0;
+}
+
+.subtext {
+  color: #8d8178;
+  margin-bottom: 30px;
+}
+
+.login-box input,
+.modal input,
+.modal textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #e5d7c8;
+  border-radius: 9px;
+  margin-bottom: 16px;
+  background: white;
+  font-size: 14px;
+}
+
+.primary-btn,
+.pet-info button,
+.modal form button {
+  width: 100%;
+  border: none;
+  border-radius: 9px;
+  padding: 15px;
+  background: #805536;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.primary-btn:hover,
+.pet-info button:hover,
+.modal form button:hover {
+  background: #5e3b27;
+}
+
+.switch-text {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.switch-text span {
+  color: #96643e;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.demo-note,
+.error {
+  font-size: 12px;
+  text-align: center;
+  color: #a87953;
+}
+
+.error {
+  color: #c0392b;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 7%;
+  background: #fffaf3;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-shadow: 0 2px 12px #0000000b;
+}
+
+.navbar .logo {
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #594638;
+  font-size: 14px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logout-btn {
+  background: #805536;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 7px;
+}
+
+.hero {
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  padding: 70px 10%;
+  background: linear-gradient(90deg, #fffaf3 30%, #fffaf3bb 65%, transparent),
+    url("https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=1400")
+    center/cover;
+}
+
+.hero-content {
+  max-width: 480px;
+}
+
+.hero h1 {
+  font-size: 58px;
+  line-height: 1.1;
+  margin: 15px 0;
+}
+
+.hero-content > p:not(.tagline) {
+  line-height: 1.8;
+  color: #78695e;
+}
+
+.hero-btn {
+  display: inline-block;
+  background: #805536;
+  color: white;
+  text-decoration: none;
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.pets-section {
+  padding: 75px 8%;
+  text-align: center;
+}
+
+.pets-section h2,
+.about-section h2 {
+  font-size: 35px;
+  margin: 10px 0;
+}
+
+.section-description {
+  color: #8b8179;
+}
+
+.search-area {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 35px auto;
+}
+
+.search-area input,
+.search-area select {
+  padding: 13px;
+  border: 1px solid #e3d5c7;
+  border-radius: 8px;
+  background: white;
+}
+
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.pet-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 5px 20px #49372c12;
+  transition: transform 0.2s;
+}
+
+.pet-card:hover {
+  transform: translateY(-6px);
+}
+
+.pet-card img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.pet-info {
+  padding: 18px;
+}
+
+.pet-info h3 {
+  font-size: 22px;
+  margin: 0 0 10px;
+}
+
+.pet-info p {
+  color: #84776e;
+  font-size: 14px;
+}
+
+.pet-info button {
+  margin-top: 10px;
+}
+
+.empty-message {
+  padding: 30px;
+}
+
+.about-section {
+  padding: 70px 10%;
+  background: #f1e6d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.about-section > div:first-child {
+  max-width: 600px;
+}
+
+.about-section p:not(.section-tag) {
+  color: #75665b;
+  line-height: 1.8;
+}
+
+.about-emoji {
+  font-size: 80px;
+}
+
+.admin-section {
+  padding: 50px 8%;
+  text-align: center;
+}
+
+.admin-btn,
+.dashboard > button {
+  background: #805536;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 20px;
+}
+
+.dashboard {
+  margin: 30px auto;
+  max-width: 800px;
+  padding: 25px;
+  text-align: left;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px #00000010;
+}
+
+.stats {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.stats div {
+  flex: 1;
+  background: #f5ede4;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats strong {
+  font-size: 25px;
+}
+
+.application {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.application select {
+  padding: 7px;
+}
+
+footer {
+  background: #49372c;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+footer h2 {
+  color: #f4d9bd;
+}
+
+footer p {
+  font-size: 14px;
+  color: #e6d5c7;
+}
+
+.modal-background {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #0008;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  background: #fffaf3;
+  border-radius: 15px;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 28px;
+  color: #49372c;
+}
+
+@media (max-width: 900px) {
+  .pet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .navbar {
+    padding: 15px 4%;
+  }
+}
+
+@media (max-width: 650px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-image {
+    width: 100%;
+    min-height: 250px;
+    padding: 25px;
+  }
+
+  .image-overlay h1 {
+    font-size: 30px;
+  }
+
+  .login-container {
+    width: 100%;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero {
+    min-height: 430px;
+    padding: 45px 7%;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .pet-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-area,
+  .about-section,
+  .stats {
+    flex-direction: column;
+  }
+
+  .about-emoji {
+    font-size: 50px;
+  }
 }
